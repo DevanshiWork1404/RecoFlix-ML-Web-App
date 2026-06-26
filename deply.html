@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Movie Recommender</title>
+  <style>
+    body {
+    
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(back.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    max-width: 600px; 
+    margin: 60px auto; 
+    background: #111; 
+    color: #fff;
+}
+    
+    h1 { color: #e50914; }
+    input, button { padding: 10px; font-size: 16px; margin-top: 10px; width: 100%; box-sizing: border-box; }
+    button { background: #e50914; color: white; border: none; cursor: pointer; }
+    button:hover { background: #b20710; }
+    #results { margin-top: 20px; }
+    .movie-card { background: #222; padding: 12px; margin: 8px 0; border-radius: 6px; }
+    #error { color: #ff6b6b; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🎬 Movie Recommender</h1>
+  <input id="movieInput" type="text" placeholder="Enter a movie name (e.g. John Carter)" />
+  <button onclick="getRecommendations()">Recommend</button>
+  <p id="error"></p>
+  <div id="results"></div>
+
+  <script>
+    async function getRecommendations() {
+      const movie = document.getElementById("movieInput").value.trim();
+      const errorEl = document.getElementById("error");
+      const resultsEl = document.getElementById("results");
+
+      errorEl.innerText = "";
+      resultsEl.innerHTML = "<p>Loading...</p>";
+
+      const response = await fetch("http://localhost:5000/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ movie })
+      });
+
+      if (!response.ok) {
+        errorEl.innerText = "Movie not found. Try another title.";
+        resultsEl.innerHTML = "";
+        return;
+      }
+
+      const data = await response.json();
+      resultsEl.innerHTML = data.recommendations
+        .map((m, i) => `<div class="movie-card">${i + 1}. ${m}</div>`)
+        .join("");
+    }
+  </script>
+</body>
+</html>
