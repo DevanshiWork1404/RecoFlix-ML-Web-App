@@ -73,7 +73,7 @@
   </div>
 
   <script>
-    fetch("http://localhost:5000/movies")
+    fetch("https://recoflix-ml-web-app.onrender.com/movies")
       .then(res => res.json())
       .then(data => {
         const datalist = document.getElementById("movieList");
@@ -92,7 +92,7 @@
       errorEl.innerText = "";
       resultsEl.innerHTML = "<p>Loading...</p>";
 
-      const response = await fetch("http://localhost:5000/recommend", {
+      const response = await fetch("https://recoflix-ml-web-app.onrender.com/recommend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ movie })
